@@ -1,8 +1,11 @@
 // Import external modules
-const express = require("express");
-const morgan = require("morgan");
+const express = require("express")
+const morgan = require("morgan")
 const dotenv = require("dotenv")
 const mongoose = require("mongoose")
+const bodyParser = require("body-parser")
+const expressValidator = require("express-validator")
+
 
 // Load env variables
 dotenv.config()
@@ -11,16 +14,20 @@ dotenv.config()
 const app = express();
 
 // Connect to the MongoDB database
-mongoose.connect(process.env.MONGO_URI, 
-    { useUnifiedTopology: true, useNewUrlParser: true })
-    .then(() => console.log("DB Connected"));
+mongoose.connect(
+    process.env.MONGO_URI, 
+    { 
+        useUnifiedTopology: true, 
+        useNewUrlParser: true 
+    })
+    .then(() => console.log("DB Connected"))
 
 mongoose.connection.on("error", err => {
-    console.log(`DB Connection Error: ${err.message}`);
-});
+    console.log(`DB Connection Error: ${err.message}`)
+})
 
 // Import the routes
-const postRoutes = require("./routes/post");
+const postRoutes = require("./routes/post")
 
 // Create custom middleware
 const logMiddleware = (req, res, next) => {
@@ -32,11 +39,13 @@ const logMiddleware = (req, res, next) => {
 };
 
 // Middleware
-app.use(morgan("dev"));
-app.use(logMiddleware);
+app.use(morgan("dev"))
+app.use(logMiddleware)
+app.use(bodyParser.json())
+app.use(expressValidator())
 
 // Define the endpoints
-app.use("/", postRoutes);
+app.use("/", postRoutes)
 
-const port = process.env.PORT || 8080;
-app.listen(port, () => { console.log(`Node JS API Listening on Port: ${port}`) });
+const port = process.env.PORT || 8080
+app.listen(port, () => { console.log(`Node JS API Listening on Port: ${port}`) })
