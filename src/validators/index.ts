@@ -1,4 +1,4 @@
-exports.createPostValidator = (req, res, next) => {
+export function createPostValidator(req: any, res: any, next: () => void) {
     // Title
     req.check("title", "Write a title").notEmpty()
     req.check("title", "Title must be between 4 and 128 characters").isLength({
@@ -19,7 +19,7 @@ exports.createPostValidator = (req, res, next) => {
 
     // If there is some error, then show the first
     if(errors) {
-        const firstError = errors.map(error => error.msg)[0]
+        const firstError = errors.map((error: { msg: any }) => error.msg)[0]
         return res.status(400).json({ error: firstError })
     }
 

@@ -1,36 +1,34 @@
 // Import external modules
-const express = require("express")
-const morgan = require("morgan")
-const dotenv = require("dotenv")
-const mongoose = require("mongoose")
-const bodyParser = require("body-parser")
-const expressValidator = require("express-validator")
+import express from "express"
+import morgan from "morgan"
+import { config } from "dotenv"
+import { connect, connection } from "mongoose"
+import { json } from "body-parser"
+import expressValidator from "express-validator"
 
 
 // Load env variables
-dotenv.config()
+config()
 
 // Create the app
 const app = express();
 
 // Connect to the MongoDB database
-mongoose.connect(
-    process.env.MONGO_URI, 
-    { 
+connect(process.env.MONGO_URI as string, { 
         useUnifiedTopology: true, 
         useNewUrlParser: true 
     })
     .then(() => console.log("DB Connected"))
 
-mongoose.connection.on("error", err => {
+connection.on("error", err => {
     console.log(`DB Connection Error: ${err.message}`)
 })
 
 // Import the routes
-const postRoutes = require("./routes/post")
+import postRoutes from "./routes/post"
 
 // Create custom middleware
-const logMiddleware = (req, res, next) => {
+const logMiddleware = (req: any, res: any, next: () => void) => {
     // Implement middleware actions
     console.log("Middleware ready!")
 
@@ -41,7 +39,7 @@ const logMiddleware = (req, res, next) => {
 // Middleware
 app.use(morgan("dev"))
 app.use(logMiddleware)
-app.use(bodyParser.json())
+app.use(json())
 app.use(expressValidator())
 
 // Define the endpoints

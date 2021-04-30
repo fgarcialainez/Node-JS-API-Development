@@ -1,7 +1,7 @@
 // Import internal modules
-const Post = require("../models/post")
+import Post from "../models/post"
 
-exports.getPosts = (req, res) => {
+export function getPosts(req: any, res: any) {
     const posts = Post.find()
         .select("_id title body")
         .then((posts) => {
@@ -10,7 +10,7 @@ exports.getPosts = (req, res) => {
         .catch(err => console.log(err))
 }
 
-exports.createPost = (req, res) => {
+export function createPost(req: any, res: any) {
     // Create the post
     const post = new Post(req.body)
 
